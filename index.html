@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Memory Rush — Arcade Edition</title>
+    <meta
+        name="description"
+        content="A futuristic arcade-style memory matching game built with HTML, CSS and JavaScript."
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Background -->
+    <div class="background-grid"></div>
+    <div class="glow glow-one"></div>
+    <div class="glow glow-two"></div>
+
+    <main class="app">
+
+        <!-- =========================
+             START SCREEN
+        ========================== -->
+
+        <section id="startScreen" class="screen active">
+
+            <div class="brand">
+                <span class="brand-icon">🧠</span>
+                <span>MEMORY<span class="brand-accent">RUSH</span></span>
+            </div>
+
+            <p class="eyebrow">ARCADE EDITION</p>
+
+            <h1>
+                How sharp is<br>
+                <span>your memory?</span>
+            </h1>
+
+            <p class="hero-description">
+                Flip. Match. Build your combo.<br>
+                Beat your best score.
+            </p>
+
+            <div class="setup-panel">
+
+                <div class="setup-group">
+                    <label>DIFFICULTY</label>
+
+                    <div class="choice-row" id="difficultyChoices">
+
+                        <button class="choice active" data-difficulty="easy">
+                            <strong>Easy</strong>
+                            <small>3 × 4</small>
+                        </button>
+
+                        <button class="choice" data-difficulty="medium">
+                            <strong>Medium</strong>
+                            <small>4 × 4</small>
+                        </button>
+
+                        <button class="choice" data-difficulty="hard">
+                            <strong>Hard</strong>
+                            <small>6 × 6</small>
+                        </button>
+
+                    </div>
+                </div>
+
+                <div class="setup-group">
+                    <label>THEME</label>
+
+                    <div class="choice-row" id="themeChoices">
+
+                        <button class="choice active" data-theme="emoji">
+                            <span>😎</span>
+                            <strong>Emoji</strong>
+                        </button>
+
+                        <button class="choice" data-theme="dev">
+                            <span>💻</span>
+                            <strong>Dev</strong>
+                        </button>
+
+                        <button class="choice" data-theme="animal">
+                            <span>🐯</span>
+                            <strong>Animals</strong>
+                        </button>
+
+                        <button class="choice" data-theme="custom">
+                            <span>🖼️</span>
+                            <strong>Custom</strong>
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- Custom image upload -->
+                <div id="customUpload" class="custom-upload hidden">
+
+                    <label for="imageInput" class="upload-box">
+                        <span class="upload-icon">＋</span>
+                        <strong>Upload your images</strong>
+                        <small>
+                            Choose 2–18 images.<br>
+                            Each image becomes a matching pair.
+                        </small>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="imageInput"
+                        accept="image/*"
+                        multiple
+                    >
+
+                    <p id="uploadStatus" class="upload-status">
+                        No custom images selected.
+                    </p>
+
+                </div>
+
+                <button id="startBtn" class="primary-btn">
+                    <span>START GAME</span>
+                    <span>→</span>
+                </button>
+
+            </div>
+
+            <div class="mini-features">
+                <span>⚡ Combo System</span>
+                <span>👀 Memory Scan</span>
+                <span>❄️ Freeze Time</span>
+                <span>🏆 Achievements</span>
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             GAME SCREEN
+        ========================== -->
+
+        <section id="gameScreen" class="screen">
+
+            <header class="game-header">
+
+                <div class="game-brand">
+                    <span>🧠</span>
+                    <strong>MEMORY<span>RUSH</span></strong>
+                </div>
+
+                <div class="game-actions">
+
+                    <button id="restartBtn" class="icon-btn" title="Restart">
+                        ↻
+                    </button>
+
+                    <button id="homeBtn" class="icon-btn" title="Home">
+                        ⌂
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- Stats -->
+
+            <div class="stats-bar">
+
+                <div class="stat-card">
+                    <span class="stat-icon">⏱</span>
+                    <div>
+                        <small>TIME</small>
+                        <strong id="timer">00:00</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon">👣</span>
+                    <div>
+                        <small>MOVES</small>
+                        <strong id="moves">0</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-icon">🎯</span>
+                    <div>
+                        <small>ACCURACY</small>
+                        <strong id="accuracy">100%</strong>
+                    </div>
+                </div>
+
+                <div class="stat-card score-stat">
+                    <span class="stat-icon">⚡</span>
+                    <div>
+                        <small>SCORE</small>
+                        <strong id="score">0</strong>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Combo -->
+
+            <div id="comboContainer" class="combo-container">
+                <span id="comboText">READY</span>
+            </div>
+
+
+            <!-- Power Ups -->
+
+            <div class="powerups">
+
+                <button id="peekBtn" class="powerup">
+                    <span class="powerup-icon">👀</span>
+
+                    <span class="powerup-info">
+                        <strong>MEMORY SCAN</strong>
+                        <small>Reveal all cards</small>
+                    </span>
+
+                    <span class="powerup-count">1</span>
+                </button>
+
+
+                <button id="freezeBtn" class="powerup">
+                    <span class="powerup-icon">❄️</span>
+
+                    <span class="powerup-info">
+                        <strong>FREEZE TIME</strong>
+                        <small>Stop clock for 5 sec</small>
+                    </span>
+
+                    <span class="powerup-count">1</span>
+                </button>
+
+            </div>
+
+
+            <!-- Game Board -->
+
+            <div id="gameBoard" class="game-board"></div>
+
+
+            <div class="game-hint">
+                <span>💡</span>
+                Find all matching pairs as quickly as possible.
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             WIN SCREEN
+        ========================== -->
+
+        <section id="winScreen" class="screen">
+
+            <div class="win-content">
+
+                <div id="winBadge" class="win-badge">
+                    🏆
+                </div>
+
+                <p class="eyebrow">MISSION COMPLETE</p>
+
+                <h2>
+                    MEMORY<br>
+                    <span>MASTERED!</span>
+                </h2>
+
+                <p id="recordMessage" class="record-message hidden">
+                    ✨ NEW PERSONAL RECORD!
+                </p>
+
+
+                <div class="result-card">
+
+                    <div class="result-main">
+                        <small>FINAL SCORE</small>
+                        <strong id="finalScore">0</strong>
+                    </div>
+
+                    <div class="result-grid">
+
+                        <div>
+                            <span>⏱</span>
+                            <small>TIME</small>
+                            <strong id="finalTime">00:00</strong>
+                        </div>
+
+                        <div>
+                            <span>👣</span>
+                            <small>MOVES</small>
+                            <strong id="finalMoves">0</strong>
+                        </div>
+
+                        <div>
+                            <span>🎯</span>
+                            <small>ACCURACY</small>
+                            <strong id="finalAccuracy">100%</strong>
+                        </div>
+
+                        <div>
+                            <span>🔥</span>
+                            <small>BEST COMBO</small>
+                            <strong id="finalCombo">x1</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Achievements -->
+
+                <div class="achievement-section">
+
+                    <h3>ACHIEVEMENTS</h3>
+
+                    <div id="achievements" class="achievements"></div>
+
+                </div>
+
+
+                <div class="win-actions">
+
+                    <button id="playAgainBtn" class="primary-btn">
+                        <span>PLAY AGAIN</span>
+                        <span>↻</span>
+                    </button>
+
+                    <button id="changeSettingsBtn" class="secondary-btn">
+                        CHANGE SETTINGS
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         TOAST
+    ========================== -->
+
+    <div id="toast" class="toast">
+        <span id="toastIcon">✨</span>
+        <span id="toastText">Nice!</span>
+    </div>
+
+
+    <!-- =========================
+         CONFETTI
+    ========================== -->
+
+    <div id="confettiContainer" class="confetti-container"></div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
